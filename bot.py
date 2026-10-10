@@ -109,8 +109,8 @@ async def main():
         "⚡ Fast Stable VPN\n"
         "🔄 Updated Daily\n\n"
 
-        "📢 Channel:\n"
-        "@Ali101_free_V2ray\n\n"
+     "📢 Channel:\n"
+"[ @Ali101_free_V2ray ](https://t.me/Ali101_free_V2ray)\n\n"
 
         "#V2Ray #VLESS #VMess #Reality\n"
         "#FreeV2Ray #VPN\n"
