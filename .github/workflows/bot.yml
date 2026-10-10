@@ -1,0 +1,31 @@
+name: Telegram Bot Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  send-message:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Download code
+      uses: actions/checkout@v4
+
+    - name: Install Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: "3.11"
+
+    - name: Install library
+      run: |
+        pip install python-telegram-bot
+
+    - name: Run bot
+      env:
+        BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+        CHANNEL: ${{ secrets.CHANNEL }}
+
+      run: |
+        python bot.py
