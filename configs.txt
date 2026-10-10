@@ -1,3 +1,2 @@
-vless://config1
-vless://config2
-vless://config3
+vless://test-config-1
+vless://test-config-2
