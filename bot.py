@@ -13,15 +13,18 @@ INDEX_FILE = "index.txt"
 def load_configs():
     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
         return [
-            line.strip()
-            for line in f.readlines()
-            if line.strip()
+            x.strip()
+            for x in f.readlines()
+            if x.strip()
         ]
 
 
 def get_index():
-    with open(INDEX_FILE, "r") as f:
-        return int(f.read().strip())
+    try:
+        with open(INDEX_FILE, "r") as f:
+            return int(f.read().strip())
+    except:
+        return 0
 
 
 def save_index(index):
@@ -29,18 +32,36 @@ def save_index(index):
         f.write(str(index))
 
 
+def is_valid_config(config):
+    
+    if len(config) < 20:
+        return False
+
+    protocols = [
+        "vless://",
+        "vmess://",
+        "trojan://",
+        "ss://"
+    ]
+
+    return any(
+        config.startswith(p)
+        for p in protocols
+    )
+
+
 def detect_protocol(config):
 
     if config.startswith("vless://"):
         return "VLESS Reality"
 
-    elif config.startswith("vmess://"):
+    if config.startswith("vmess://"):
         return "VMess"
 
-    elif config.startswith("trojan://"):
+    if config.startswith("trojan://"):
         return "Trojan"
 
-    elif config.startswith("ss://"):
+    if config.startswith("ss://"):
         return "Shadowsocks"
 
     return "VPN"
@@ -48,7 +69,6 @@ def detect_protocol(config):
 
 def rename_config(config, name):
 
-    # حذف اسم قبلی بعد از #
     if "#" in config:
         config = config.split("#")[0]
 
@@ -64,17 +84,25 @@ async def main():
 
     index = get_index()
 
+    while index < len(configs):
 
-    # اگر به آخر رسید، از اول شروع شود
+        raw_config = configs[index]
+
+        if is_valid_config(raw_config):
+            break
+
+        index += 1
+
+
     if index >= len(configs):
         index = 0
+        raw_config = configs[0]
 
 
-    config_name = f"Ali101-{index + 101}"
-
+    config_name = f"Ali101-{index+101}"
 
     config = rename_config(
-        configs[index],
+        raw_config,
         config_name
     )
 
@@ -92,7 +120,7 @@ async def main():
         f"{protocol}\n\n"
 
         "✅ Status:\n"
-        "Tested & Working\n\n"
+        "Checked & Working\n\n"
 
         "━━━━━━━━━━━━━━\n\n"
 
@@ -109,14 +137,15 @@ async def main():
         "⚡ Fast Stable VPN\n"
         "🔄 Updated Daily\n\n"
 
-     "📢 Channel:\n"
-"[ @Ali101_free_V2ray ](https://t.me/Ali101_free_V2ray)\n\n"
+        "📢 Channel:\n"
+        "[ @Ali101_free_V2ray ]"
+        "(https://t.me/Ali101_free_V2ray)\n\n"
 
-        "#V2Ray #VLESS #VMess #Reality\n"
+        "#V2Ray #VLESS #Reality\n"
         "#FreeV2Ray #VPN\n"
-        "#کانفیگ_رایگان #کانفیگ_واقعی\n\n"
+        "#کانفیگ_رایگان\n\n"
 
-        "👤 Ali 101"
+        "🚀 Ali101 Free VPN"
     )
 
 
