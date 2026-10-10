@@ -2,7 +2,7 @@ name: Ali101 V2Ray Bot
 
 on:
   schedule:
-    - cron: "0 * * * *"
+  - cron: "*/20 * * * *"
 
   workflow_dispatch:
 
