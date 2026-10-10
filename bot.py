@@ -2,24 +2,70 @@ import os
 import asyncio
 from telegram import Bot
 
+
 TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL = os.getenv("CHANNEL")
 
 
-async def main():
+CONFIG_FILE = "configs.txt"
+INDEX_FILE = "index.txt"
+
+
+def get_index():
+    with open(INDEX_FILE, "r") as f:
+        return int(f.read().strip())
+
+
+def save_index(index):
+    with open(INDEX_FILE, "w") as f:
+        f.write(str(index))
+
+
+def load_configs():
+    with open(CONFIG_FILE, "r") as f:
+        return [
+            x.strip()
+            for x in f.readlines()
+            if x.strip()
+        ]
+
+
+async def send_config():
 
     bot = Bot(token=TOKEN)
 
-    text = """
-🚀 تست ربات Ali101 موفق بود ✅
+    configs = load_configs()
 
-V2Ray Free Config Bot
-"""
+    index = get_index()
 
-    await bot.send_message(
-        chat_id=CHANNEL,
-        text=text
-    )
+    if index >= len(configs):
+        index = 0
 
 
-asyncio.run(main())
+    config = configs[index]
+
+
+    # حذف نام قبلی کانفیگ
+    if "#" in config:
+        config = config.split("#")[0]
+
+
+    config_name = f"Ali101-{index+101}"
+
+
+    # اضافه کردن برند Ali101 به لینک
+    config = config + "#" + config_name
+
+
+    text = f"""
+🚀 Ali 101 | V2Ray Free Config 🇮🇷
+
+🔹 Config ID: {config_name}
+
+⚡ Protocol: VLESS / VMess / Reality
+✅ Status: Tested & Working
+
+━━━━━━━━━━━━━━
+
+```txt
+{config}
