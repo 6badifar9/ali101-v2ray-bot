@@ -53,7 +53,7 @@ async def send_config():
     config_name = f"Ali101-{index+101}"
 
 
-    # اضافه کردن برند Ali101 به لینک
+    # اضافه کردن نام برند
     config = config + "#" + config_name
 
 
