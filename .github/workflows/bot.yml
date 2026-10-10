@@ -1,11 +1,18 @@
-name: Telegram Bot Test
+name: Ali101 V2Ray Bot
 
 on:
   schedule:
     - cron: "0 * * * *"
 
   workflow_dispatch:
+
+
+permissions:
+  contents: write
+
+
 jobs:
+
   send-message:
 
     runs-on: ubuntu-latest
@@ -31,3 +38,11 @@ jobs:
 
       run: |
         python bot.py
+
+    - name: Save index
+      run: |
+        git config --global user.name "Ali101 Bot"
+        git config --global user.email "bot@ali101.com"
+        git add index.txt
+        git commit -m "Update config index" || exit 0
+        git push
