@@ -2,34 +2,24 @@ import os
 import asyncio
 from telegram import Bot
 
-TOKEN = "8778113385:AAEgQNtSpzB7UupCvfaBg7MU_CEXNuiCRvc"
-CHANNEL = "@Ali101_free_V2ray"
-
-bot = Bot(TOKEN)
-
-with open("configs.txt","r") as f:
-    configs = [x.strip() for x in f.readlines() if x.strip()]
+TOKEN = os.getenv("BOT_TOKEN")
+CHANNEL = os.getenv("CHANNEL")
 
 
-async def send_config():
+async def main():
 
-    for i, config in enumerate(configs):
+    bot = Bot(token=TOKEN)
 
-        text = f"""
-🚀 V2Ray Free Config 🇮🇷
+    text = """
+🚀 تست ربات Ali101 موفق بود ✅
 
-⚡ VLESS Reality
-🌍 Fast Server
-✅ Tested & Working
+V2Ray Free Config Bot
+"""
 
-```txt
-{config}
+    await bot.send_message(
+        chat_id=CHANNEL,
+        text=text
+    )
 
-  await bot.send_message(
-    chat_id=CHANNEL,
-    text="🚀 تست ربات Ali101 موفق بود ✅"
-)
 
-    break
-
-    
+asyncio.run(main())
