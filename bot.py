@@ -1,53 +1,42 @@
 import os
 import asyncio
-from telegram import Bot
+from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.constants import ParseMode
 
 
 TOKEN = os.getenv("BOT_TOKEN")
-CHANNEL = os.getenv("CHANNEL")
 
-CONFIG_FILE = "configs.txt"
-INDEX_FILE = "index.txt"
+CHANNEL = "@Ali101_free_V2ray"
+
+
+bot = Bot(TOKEN)
+
+
+START_NUMBER = 101
 
 
 def load_configs():
-    with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-        return [
-            line.strip()
-            for line in f.readlines()
-            if line.strip()
-        ]
+
+    with open("configs.txt", "r", encoding="utf-8") as f:
+        lines = f.readlines()
+
+    configs = []
+
+    for line in lines:
+        line = line.strip()
+
+        if line and (
+            line.startswith("vless://")
+            or line.startswith("vmess://")
+            or line.startswith("trojan://")
+        ):
+            configs.append(line)
+
+    return configs
 
 
-def get_index():
-    try:
-        with open(INDEX_FILE, "r") as f:
-            return int(f.read().strip())
-    except:
-        return 0
 
-
-def save_index(index):
-    with open(INDEX_FILE, "w") as f:
-        f.write(str(index))
-
-
-def is_valid_config(config):
-
-    if len(config) < 20:
-        return False
-
-    return config.startswith(
-        (
-            "vless://",
-            "vmess://",
-            "trojan://",
-            "ss://"
-        )
-    )
-
-
-def detect_protocol(config):
+def get_protocol(config):
 
     if config.startswith("vless://"):
         return "VLESS Reality"
@@ -58,113 +47,87 @@ def detect_protocol(config):
     if config.startswith("trojan://"):
         return "Trojan"
 
-    if config.startswith("ss://"):
-        return "Shadowsocks"
-
-    return "VPN"
+    return "Unknown"
 
 
-def add_name(config, name):
 
-    if "#" in config:
-        config = config.split("#")[0]
+async def send_configs():
 
-    return config + "#" + name
+    configs = load_configs()
+
+    counter = START_NUMBER
+
+
+    for i in range(0, len(configs), 5):
+
+        batch = configs[i:i+5]
+
+
+        text = (
+            "🚀 <b>Ali101 Free VPN #V2ray</b>\n\n"
+            "🔥 <b>Fresh Configs</b>\n"
+            "✅ Tested & Working\n\n"
+        )
+
+
+        buttons = []
+
+
+        for config in batch:
+
+            name = f"Ali101-{counter}"
+
+            protocol = get_protocol(config)
+
+
+            text += (
+                f"🔹 <b>{name}</b>\n"
+                f"⚡ Protocol: {protocol}\n"
+                f"📋 Copy button below\n\n"
+            )
+
+
+            buttons.append(
+                [
+                    InlineKeyboardButton(
+                        f"📋 Copy {name}",
+                        callback_data=f"copy_{counter}"
+                    )
+                ]
+            )
+
+
+            counter += 1
+
+
+
+        text += (
+            "━━━━━━━━━━━━━━\n"
+            "📢 Channel:\n"
+            f"{CHANNEL}\n\n"
+            "#V2Ray #VLESS #Reality\n"
+            "#FreeVPN #کانفیگ_رایگان"
+        )
+
+
+        await bot.send_message(
+            chat_id=CHANNEL,
+            text=text,
+            parse_mode=ParseMode.HTML,
+            reply_markup=InlineKeyboardMarkup(buttons)
+        )
+
+
+        await asyncio.sleep(1200)
 
 
 
 async def main():
 
-    bot = Bot(token=TOKEN)
-
-    configs = load_configs()
-
-    index = get_index()
-
-
-    while index < len(configs):
-
-        if is_valid_config(configs[index]):
-            break
-
-        index += 1
-
-
-    if index >= len(configs):
-        index = 0
-
-
-    config_name = f"Ali101-{index + 101}"
-
-    config = add_name(
-        configs[index],
-        config_name
-    )
-
-
-    protocol = detect_protocol(config)
-
-
-    message = f"""
-🚀 <b>Ali 101 | Free V2Ray Config 🇮🇷</b>
-
-
-🔹 <b>Config ID:</b>
-{config_name}
-
-
-⚡ <b>Protocol:</b>
-{protocol}
-
-
-✅ <b>Status:</b>
-Checked & Working
-
-
-━━━━━━━━━━━━━━
-
-
-📋 <b>Copy Config:</b>
-
-<code>{config}</code>
-
-
-━━━━━━━━━━━━━━
-
-
-📱 <b>Compatible:</b>
-V2RayNG | V2Box | Nekoray
-
-
-🔥 Free V2Ray Config
-⚡ Fast Stable VPN
-🔄 Updated Daily
-
-
-📢 <b>Channel:</b>
-<a href="https://t.me/Ali101_free_V2ray">
-@Ali101_free_V2ray
-</a>
-
-
-#V2Ray #VLESS #Reality
-#FreeV2Ray #VPN
-#کانفیگ_رایگان
-
-
-🚀 Ali101 Free VPN
-"""
-
-
-    await bot.send_message(
-        chat_id=CHANNEL,
-        text=message,
-        parse_mode="HTML"
-    )
-
-
-    save_index(index + 1)
+    await send_configs()
 
 
 
-asyncio.run(main())
+if __name__ == "__main__":
+
+    asyncio.run(main())
