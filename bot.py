@@ -11,18 +11,51 @@ INDEX_FILE = "index.txt"
 
 
 def load_configs():
-    with open(CONFIG_FILE, "r") as f:
-        return [x.strip() for x in f.readlines() if x.strip()]
+    with open(CONFIG_FILE, "r", encoding="utf-8") as f:
+        return [
+            line.strip()
+            for line in f.readlines()
+            if line.strip()
+        ]
 
 
 def get_index():
     with open(INDEX_FILE, "r") as f:
-        return int(f.read())
+        return int(f.read().strip())
 
 
 def save_index(index):
     with open(INDEX_FILE, "w") as f:
         f.write(str(index))
+
+
+def detect_protocol(config):
+
+    if config.startswith("vless://"):
+        return "VLESS Reality"
+
+    elif config.startswith("vmess://"):
+        return "VMess"
+
+    elif config.startswith("trojan://"):
+        return "Trojan"
+
+    elif config.startswith("ss://"):
+        return "Shadowsocks"
+
+    else:
+        return "VPN"
+
+
+def rename_config(config, name):
+
+    # حذف remark قبلی
+    if "#" in config:
+        config = config.split("#")[0]
+
+    # اضافه کردن نام Ali101
+    return config + "#" + name
+
 
 
 async def main():
@@ -33,43 +66,37 @@ async def main():
 
     index = get_index()
 
+
+    # اگر رسید آخر دوباره از اول شروع شود
     if index >= len(configs):
         index = 0
 
 
-    config = configs[index]
-
-    if "#" in config:
-        config = config.split("#")[0]
+    original_config = configs[index]
 
 
-    name = f"Ali101-{index+101}"
-
-    config = config + "#" + name
+    config_name = f"Ali101-{index+101}"
 
 
-    text = (
-        f"🚀 Ali 101 | V2Ray Free Config 🇮🇷\n\n"
-        f"🔹 Config ID: {name}\n\n"
-        f"⚡ Protocol: VLESS / VMess / Reality\n"
-        f"✅ Status: Tested & Working\n\n"
-        f"━━━━━━━━━━━━━━\n\n"
-        f"{config}\n\n"
-        f"━━━━━━━━━━━━━━\n\n"
-        f"📱 V2RayNG Compatible\n\n"
-        f"#V2Ray #VLESS #Reality\n"
-        f"#کانفیگ_رایگان #VPN\n\n"
-        f"👤 Ali 101"
+    protocol = detect_protocol(original_config)
+
+
+    config = rename_config(
+        original_config,
+        config_name
     )
 
 
-    await bot.send_message(
-        chat_id=CHANNEL,
-        text=text
-    )
+    message = f"""
+🚀 Ali 101 | Free V2Ray Config 🇮🇷
 
+🔹 Config ID:
+{config_name}
 
-    save_index(index + 1)
+⚡ Protocol:
+{protocol}
 
+✅ Status:
+Tested & Working
 
-asyncio.run(main())
+━━━━━━━━━━━━━━
