@@ -25,13 +25,10 @@ async def send_config():
 ```txt
 {config}
 
-    await bot.send_message(
-        chat_id=https://t.me/Ali101_free_V2ray,
-        text=🚀 V2Ray Free Config
-
-vless://xxxxx,
-        parse_mode="Markdown"
-    )
+  await bot.send_message(
+    chat_id="@Ali101_free_V2ray",
+    text="🚀 تست ربات Ali101 موفق بود ✅"
+)
 
     break
 
