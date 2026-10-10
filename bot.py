@@ -37,16 +37,13 @@ def is_valid_config(config):
     if len(config) < 20:
         return False
 
-    allowed = [
-        "vless://",
-        "vmess://",
-        "trojan://",
-        "ss://"
-    ]
-
-    return any(
-        config.startswith(x)
-        for x in allowed
+    return config.startswith(
+        (
+            "vless://",
+            "vmess://",
+            "trojan://",
+            "ss://"
+        )
     )
 
 
@@ -109,34 +106,33 @@ async def main():
 
 
     message = f"""
-🚀 Ali 101 | Free V2Ray Config 🇮🇷
+🚀 <b>Ali 101 | Free V2Ray Config 🇮🇷</b>
 
 
-🔹 Config ID:
+🔹 <b>Config ID:</b>
 {config_name}
 
 
-⚡ Protocol:
+⚡ <b>Protocol:</b>
 {protocol}
 
 
-✅ Status:
+✅ <b>Status:</b>
 Checked & Working
 
 
 ━━━━━━━━━━━━━━
 
 
-📋 Copy Config:
+📋 <b>Copy Config:</b>
 
-
-{config}
+<code>{config}</code>
 
 
 ━━━━━━━━━━━━━━
 
 
-📱 Compatible:
+📱 <b>Compatible:</b>
 V2RayNG | V2Box | Nekoray
 
 
@@ -145,8 +141,10 @@ V2RayNG | V2Box | Nekoray
 🔄 Updated Daily
 
 
-📢 Channel:
-https://t.me/Ali101_free_V2ray
+📢 <b>Channel:</b>
+<a href="https://t.me/Ali101_free_V2ray">
+@Ali101_free_V2ray
+</a>
 
 
 #V2Ray #VLESS #Reality
@@ -160,7 +158,8 @@ https://t.me/Ali101_free_V2ray
 
     await bot.send_message(
         chat_id=CHANNEL,
-        text=message
+        text=message,
+        parse_mode="HTML"
     )
 
 
