@@ -2,8 +2,8 @@ import os
 import asyncio
 from telegram import Bot
 
-TOKEN = os.getenv("BOT_TOKEN")
-CHANNEL = os.getenv("CHANNEL")
+TOKEN = "8778113385:AAEgQNtSpzB7UupCvfaBg7MU_CEXNuiCRvc"
+CHANNEL = "@Ali101_free_V2ray"
 
 bot = Bot(TOKEN)
 
