@@ -13,9 +13,9 @@ INDEX_FILE = "index.txt"
 def load_configs():
     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
         return [
-            x.strip()
-            for x in f.readlines()
-            if x.strip()
+            line.strip()
+            for line in f.readlines()
+            if line.strip()
         ]
 
 
@@ -33,11 +33,11 @@ def save_index(index):
 
 
 def is_valid_config(config):
-    
+
     if len(config) < 20:
         return False
 
-    protocols = [
+    allowed = [
         "vless://",
         "vmess://",
         "trojan://",
@@ -45,8 +45,8 @@ def is_valid_config(config):
     ]
 
     return any(
-        config.startswith(p)
-        for p in protocols
+        config.startswith(x)
+        for x in allowed
     )
 
 
@@ -67,7 +67,7 @@ def detect_protocol(config):
     return "VPN"
 
 
-def rename_config(config, name):
+def add_name(config, name):
 
     if "#" in config:
         config = config.split("#")[0]
@@ -84,11 +84,10 @@ async def main():
 
     index = get_index()
 
+
     while index < len(configs):
 
-        raw_config = configs[index]
-
-        if is_valid_config(raw_config):
+        if is_valid_config(configs[index]):
             break
 
         index += 1
@@ -96,13 +95,12 @@ async def main():
 
     if index >= len(configs):
         index = 0
-        raw_config = configs[0]
 
 
-    config_name = f"Ali101-{index+101}"
+    config_name = f"Ali101-{index + 101}"
 
-    config = rename_config(
-        raw_config,
+    config = add_name(
+        configs[index],
         config_name
     )
 
@@ -110,49 +108,59 @@ async def main():
     protocol = detect_protocol(config)
 
 
-    message = (
-        "🚀 Ali 101 | Free V2Ray Config 🇮🇷\n\n"
+    message = f"""
+🚀 Ali 101 | Free V2Ray Config 🇮🇷
 
-        f"🔹 Config ID:\n"
-        f"{config_name}\n\n"
 
-        f"⚡ Protocol:\n"
-        f"{protocol}\n\n"
+🔹 Config ID:
+{config_name}
 
-        "✅ Status:\n"
-        "Checked & Working\n\n"
 
-        "━━━━━━━━━━━━━━\n\n"
+⚡ Protocol:
+{protocol}
 
-        "```\n"
-        f"{config}\n"
-        "```\n\n"
 
-        "━━━━━━━━━━━━━━\n\n"
+✅ Status:
+Checked & Working
 
-        "📱 Compatible:\n"
-        "V2RayNG | V2Box | Nekoray\n\n"
 
-        "🔥 Free V2Ray Config\n"
-        "⚡ Fast Stable VPN\n"
-        "🔄 Updated Daily\n\n"
+━━━━━━━━━━━━━━
 
-        "📢 Channel:\n"
-        "[ @Ali101_free_V2ray ]"
-        "(https://t.me/Ali101_free_V2ray)\n\n"
 
-        "#V2Ray #VLESS #Reality\n"
-        "#FreeV2Ray #VPN\n"
-        "#کانفیگ_رایگان\n\n"
+📋 Copy Config:
 
-        "🚀 Ali101 Free VPN"
-    )
+
+{config}
+
+
+━━━━━━━━━━━━━━
+
+
+📱 Compatible:
+V2RayNG | V2Box | Nekoray
+
+
+🔥 Free V2Ray Config
+⚡ Fast Stable VPN
+🔄 Updated Daily
+
+
+📢 Channel:
+https://t.me/Ali101_free_V2ray
+
+
+#V2Ray #VLESS #Reality
+#FreeV2Ray #VPN
+#کانفیگ_رایگان
+
+
+🚀 Ali101 Free VPN
+"""
 
 
     await bot.send_message(
         chat_id=CHANNEL,
-        text=message,
-        parse_mode="Markdown"
+        text=message
     )
 
 
