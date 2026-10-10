@@ -12,11 +12,7 @@ INDEX_FILE = "index.txt"
 
 def load_configs():
     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-        return [
-            line.strip()
-            for line in f.readlines()
-            if line.strip()
-        ]
+        return [x.strip() for x in f.readlines() if x.strip()]
 
 
 def get_index():
@@ -34,26 +30,23 @@ def detect_protocol(config):
     if config.startswith("vless://"):
         return "VLESS Reality"
 
-    elif config.startswith("vmess://"):
+    if config.startswith("vmess://"):
         return "VMess"
 
-    elif config.startswith("trojan://"):
+    if config.startswith("trojan://"):
         return "Trojan"
 
-    elif config.startswith("ss://"):
+    if config.startswith("ss://"):
         return "Shadowsocks"
 
-    else:
-        return "VPN"
+    return "VPN"
 
 
 def rename_config(config, name):
 
-    # حذف remark قبلی
     if "#" in config:
         config = config.split("#")[0]
 
-    # اضافه کردن نام Ali101
     return config + "#" + name
 
 
@@ -66,37 +59,57 @@ async def main():
 
     index = get_index()
 
-
-    # اگر رسید آخر دوباره از اول شروع شود
     if index >= len(configs):
         index = 0
 
 
-    original_config = configs[index]
-
-
-    config_name = f"Ali101-{index+101}"
-
-
-    protocol = detect_protocol(original_config)
-
+    config_name = "Ali101-" + str(index + 101)
 
     config = rename_config(
-        original_config,
+        configs[index],
         config_name
     )
 
 
-    message = f"""
-🚀 Ali 101 | Free V2Ray Config 🇮🇷
+    protocol = detect_protocol(config)
 
-🔹 Config ID:
-{config_name}
 
-⚡ Protocol:
-{protocol}
+    message = (
+        "🚀 Ali 101 | Free V2Ray Config 🇮🇷\n\n"
+        "🔹 Config ID:\n"
+        + config_name +
+        "\n\n"
+        "⚡ Protocol:\n"
+        + protocol +
+        "\n\n"
+        "✅ Status:\n"
+        "Tested & Working\n\n"
+        "━━━━━━━━━━━━━━\n\n"
+        "```\n"
+        + config +
+        "\n```\n\n"
+        "━━━━━━━━━━━━━━\n\n"
+        "📱 Compatible:\n"
+        "V2RayNG | V2Box | Nekoray\n\n"
+        "🔥 Free V2Ray Config\n"
+        "⚡ Fast Stable VPN\n"
+        "🔄 Updated Daily\n\n"
+        "#V2Ray #VLESS #VMess #Reality\n"
+        "#FreeV2Ray #VPN\n"
+        "#کانفیگ_رایگان #کانفیگ_واقعی\n\n"
+        "👤 Ali 101"
+    )
 
-✅ Status:
-Tested & Working
 
-━━━━━━━━━━━━━━
+    await bot.send_message(
+        chat_id=CHANNEL,
+        text=message,
+        parse_mode="Markdown"
+    )
+
+
+    save_index(index + 1)
+
+
+
+asyncio.run(main())
