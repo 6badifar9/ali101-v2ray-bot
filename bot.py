@@ -6,14 +6,18 @@ from telegram import Bot
 TOKEN = os.getenv("BOT_TOKEN")
 CHANNEL = os.getenv("CHANNEL")
 
-
 CONFIG_FILE = "configs.txt"
 INDEX_FILE = "index.txt"
 
 
+def load_configs():
+    with open(CONFIG_FILE, "r") as f:
+        return [x.strip() for x in f.readlines() if x.strip()]
+
+
 def get_index():
     with open(INDEX_FILE, "r") as f:
-        return int(f.read().strip())
+        return int(f.read())
 
 
 def save_index(index):
@@ -21,16 +25,7 @@ def save_index(index):
         f.write(str(index))
 
 
-def load_configs():
-    with open(CONFIG_FILE, "r") as f:
-        return [
-            x.strip()
-            for x in f.readlines()
-            if x.strip()
-        ]
-
-
-async def send_config():
+async def main():
 
     bot = Bot(token=TOKEN)
 
@@ -44,28 +39,37 @@ async def send_config():
 
     config = configs[index]
 
-
-    # حذف نام قبلی کانفیگ
     if "#" in config:
         config = config.split("#")[0]
 
 
-    config_name = f"Ali101-{index+101}"
+    name = f"Ali101-{index+101}"
+
+    config = config + "#" + name
 
 
-    # اضافه کردن نام برند
-    config = config + "#" + config_name
+    text = (
+        f"🚀 Ali 101 | V2Ray Free Config 🇮🇷\n\n"
+        f"🔹 Config ID: {name}\n\n"
+        f"⚡ Protocol: VLESS / VMess / Reality\n"
+        f"✅ Status: Tested & Working\n\n"
+        f"━━━━━━━━━━━━━━\n\n"
+        f"{config}\n\n"
+        f"━━━━━━━━━━━━━━\n\n"
+        f"📱 V2RayNG Compatible\n\n"
+        f"#V2Ray #VLESS #Reality\n"
+        f"#کانفیگ_رایگان #VPN\n\n"
+        f"👤 Ali 101"
+    )
 
 
-    text = f"""
-🚀 Ali 101 | V2Ray Free Config 🇮🇷
+    await bot.send_message(
+        chat_id=CHANNEL,
+        text=text
+    )
 
-🔹 Config ID: {config_name}
 
-⚡ Protocol: VLESS / VMess / Reality
-✅ Status: Tested & Working
+    save_index(index + 1)
 
-━━━━━━━━━━━━━━
 
-```txt
-{config}
+asyncio.run(main())
