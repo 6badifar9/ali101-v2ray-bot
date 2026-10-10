@@ -26,7 +26,7 @@ async def send_config():
 {config}
 
   await bot.send_message(
-    chat_id="@Ali101_free_V2ray",
+    chat_id=CHANNEL,
     text="🚀 تست ربات Ali101 موفق بود ✅"
 )
 
