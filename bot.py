@@ -1,6 +1,6 @@
 import os
 import asyncio
-from telegram import Bot
+from telegram import Bot, InlineKeyboardButton, InlineKeyboardMarkup
 
 
 TOKEN = os.getenv("BOT_TOKEN")
@@ -12,7 +12,11 @@ INDEX_FILE = "index.txt"
 
 def load_configs():
     with open(CONFIG_FILE, "r", encoding="utf-8") as f:
-        return [x.strip() for x in f.readlines() if x.strip()]
+        return [
+            x.strip()
+            for x in f.readlines()
+            if x.strip()
+        ]
 
 
 def get_index():
@@ -30,13 +34,13 @@ def detect_protocol(config):
     if config.startswith("vless://"):
         return "VLESS Reality"
 
-    if config.startswith("vmess://"):
+    elif config.startswith("vmess://"):
         return "VMess"
 
-    if config.startswith("trojan://"):
+    elif config.startswith("trojan://"):
         return "Trojan"
 
-    if config.startswith("ss://"):
+    elif config.startswith("ss://"):
         return "Shadowsocks"
 
     return "VPN"
@@ -59,11 +63,12 @@ async def main():
 
     index = get_index()
 
+
     if index >= len(configs):
         index = 0
 
 
-    config_name = "Ali101-" + str(index + 101)
+    config_name = f"Ali101-{index+101}"
 
     config = rename_config(
         configs[index],
@@ -76,24 +81,21 @@ async def main():
 
     message = (
         "🚀 Ali 101 | Free V2Ray Config 🇮🇷\n\n"
-        "🔹 Config ID:\n"
-        + config_name +
-        "\n\n"
-        "⚡ Protocol:\n"
-        + protocol +
-        "\n\n"
-        "✅ Status:\n"
-        "Tested & Working\n\n"
+        f"🔹 Config ID:\n{config_name}\n\n"
+        f"⚡ Protocol:\n{protocol}\n\n"
+        "✅ Status:\nTested & Working\n\n"
         "━━━━━━━━━━━━━━\n\n"
         "```\n"
-        + config +
-        "\n```\n\n"
+        f"{config}\n"
+        "```\n\n"
         "━━━━━━━━━━━━━━\n\n"
         "📱 Compatible:\n"
         "V2RayNG | V2Box | Nekoray\n\n"
         "🔥 Free V2Ray Config\n"
         "⚡ Fast Stable VPN\n"
         "🔄 Updated Daily\n\n"
+        "📢 Channel:\n"
+        "@Ali101_free_V2ray\n\n"
         "#V2Ray #VLESS #VMess #Reality\n"
         "#FreeV2Ray #VPN\n"
         "#کانفیگ_رایگان #کانفیگ_واقعی\n\n"
@@ -101,10 +103,23 @@ async def main():
     )
 
 
+    keyboard = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    "📲 Add to V2RayNG",
+                    url=config
+                )
+            ]
+        ]
+    )
+
+
     await bot.send_message(
         chat_id=CHANNEL,
         text=message,
-        parse_mode="Markdown"
+        parse_mode="Markdown",
+        reply_markup=keyboard
     )
 
 
