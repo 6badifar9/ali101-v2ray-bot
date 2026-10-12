@@ -1,0 +1,6 @@
+# Example file only. DO NOT upload this as configs.txt.
+# Leave the original configs.txt from the GitHub repository untouched.
+# Paste one genuine link per line into your existing configs.txt:
+# vless://UUID@host.example:443?encryption=none&security=reality#name
+# vmess://BASE64_JSON
+# trojan://password@host.example:443?security=tls#name
