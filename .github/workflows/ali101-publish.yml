@@ -2,13 +2,13 @@ name: Ali101 - Send one V2Ray config
 
 on:
   schedule:
-    # Best effort: 00, 11, 22, 33, 44, 55 UTC each hour.
-    # At hour transitions, the bot enforces at least 11 minutes since last post.
-    - cron: '*/11 * * * *'
+    # Best effort: minutes 07, 17, 27, 37, 47 and 57 UTC each hour.
+    # The bot checks that at least 10 minutes have passed since the previous post.
+    - cron: '7,17,27,37,47,57 * * * *'
   workflow_dispatch:
     inputs:
       force_send:
-        description: 'Override 11-minute waiting period (manual test only)?'
+        description: 'Override 10-minute waiting period (manual test only)?'
         type: boolean
         default: false
 
@@ -38,7 +38,7 @@ jobs:
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHANNEL_ID: '@Ali101_free_V2ray'
-          SEND_INTERVAL_MINUTES: '11'
+          SEND_INTERVAL_MINUTES: '10'
           ENABLE_TCP_CHECK: '0'
           FORCE_SEND: ${{ inputs.force_send || 'false' }}
         run: python bot.py
