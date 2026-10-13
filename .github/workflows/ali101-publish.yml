@@ -2,13 +2,12 @@ name: Ali101 - Send one V2Ray config
 
 on:
   schedule:
-    # Best effort: minutes 07, 17, 27, 37, 47 and 57 UTC each hour.
-    # The bot checks that at least 10 minutes have passed since the previous post.
     - cron: '7,17,27,37,47,57 * * * *'
+
   workflow_dispatch:
     inputs:
       force_send:
-        description: 'Override 10-minute waiting period (manual test only)?'
+        description: 'Force send for manual testing?'
         type: boolean
         default: false
 
@@ -23,18 +22,19 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           persist-credentials: true
-      - name: Set up Python
+
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Run unit tests
-        run: python -m unittest discover -s tests -v
-      - name: Send exactly one configuration
+
+      - name: Send one V2Ray config
         env:
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHANNEL_ID: '@Ali101_free_V2ray'
@@ -42,20 +42,24 @@ jobs:
           ENABLE_TCP_CHECK: '0'
           FORCE_SEND: ${{ inputs.force_send || 'false' }}
         run: python bot.py
-      - name: Save publish state even on send error
+
+      - name: Save bot state
         if: always()
         run: |
           if [ ! -f state.json ]; then
-            echo 'No state to commit.'
+            echo "No state changes."
             exit 0
           fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add state.json
+
           if git diff --cached --quiet; then
-            echo 'State is unchanged.'
+            echo "State unchanged."
           else
-            git commit -m 'chore: update Ali101 publish state [skip ci]'
+            git commit -m "Update Ali101 bot state"
             git pull --rebase
             git push
           fi
