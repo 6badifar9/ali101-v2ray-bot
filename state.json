@@ -1,6 +1,7 @@
 {
-  "cursor": 18,
+  "cursor": 0,
   "posted_ids": [
+    "06166298d1b400da5fa7a2f7",
     "184cb65f5b37b6c818a0a10e",
     "29a16b0d6e18ccd00b2c96b9",
     "54420c714be88f70e6b1e86f",
@@ -9,5 +10,5 @@
     "9d914cc9ba5d4aab682820a2",
     "a342ad8c6440fe9eb9fdf7f4"
   ],
-  "last_sent_at": 1792869935.8347347
+  "last_sent_at": 1792878318.4832141
 }
